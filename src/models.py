@@ -25,16 +25,21 @@ class Favorite(db.Model):
     __tablename__ = 'favorites'
     id: Mapped[int] = mapped_column(primary_key=True)
     user_id: Mapped[int] = mapped_column(ForeignKey('users.id'), nullable=False)
-    item_id: Mapped[int] = mapped_column(nullable=False)
-    item_type: Mapped[str] = mapped_column(String(60), nullable=False)
+    character_id: Mapped[int] = mapped_column(ForeignKey('characters.id'), nullable=False)
+    planet_id: Mapped[int] = mapped_column(ForeignKey('planets.id'), nullable=False)
+    vehicle_id: Mapped[int] = mapped_column(ForeignKey('vehicles.id'), nullable=False)
     user = relationship('User', backref='favorites')
-    
+    character = relationship('characters', backref='favorites')
+    planet = relationship('planets', backref='favorites')
+    vehicle = relationship('vehicles', backref='favorites')
+
     def serialize(self):
         return {
             "id": self.id,
-            "user_id": self.user_id,
-            "item_id": self.item_id,
-            "item_type": self.item_type,
+            'user_id': self.user_id,
+            "character_id": self.character_id,
+            "planet_id": self.planet_id,
+            "vehicle_id": self.vehicle_id,
         }
 
 class Character(db.Model):
@@ -51,7 +56,7 @@ class Character(db.Model):
 
 
 class Planet(db.Model):
-    __tablename__ = 'Planets'
+    __tablename__ = 'planets'
     id: Mapped[int] = mapped_column(primary_key=True)
     climate: Mapped[str] = mapped_column(String(60), unique=False, nullable=False)
     diameter: Mapped[str] = mapped_column(String(60), unique=False, nullable=False)
